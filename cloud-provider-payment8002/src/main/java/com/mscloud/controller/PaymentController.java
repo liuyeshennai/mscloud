@@ -5,7 +5,10 @@ import com.mscloud.entities.Payment;
 import com.mscloud.service.IPaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -13,6 +16,14 @@ public class PaymentController {
 
     @Autowired
     private IPaymentService service;
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
+    @GetMapping("/discovery")
+    public CommonResult discovery(){
+        List<String> services = discoveryClient.getServices();
+        return new CommonResult(200,"成功",services.toString());
+    }
 
     @PostMapping(value = "/payment/create")
     public CommonResult create(@RequestBody Payment payment){
